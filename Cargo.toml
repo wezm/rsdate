@@ -12,7 +12,7 @@ repository = "https://github.com/wezm/rsdate.git"
 readme = "README.md"
 license = "MIT OR Apache-2.0"
 
-description = "rsdate connects to an ntp server, printing the returned time and/or setting the system clock."
+description = "rsdate connects to an ntp server, printing the returned time and/or sets the system clock."
 keywords = ["ntp", "time", "date"]
 categories = ["command-line-utilities", "date-and-time"]
 

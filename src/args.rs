@@ -59,7 +59,7 @@ pub fn print_usage() -> Result<Option<Config>, Error> {
     println!(
         "{}
 
-{bin} connects to an ntp server, printing the returned time and/or setting
+{bin} connects to an ntp server, printing the returned time and/or sets
 the system clock.
 
 E.g. {bin} pool.ntp.org
