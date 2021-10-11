@@ -1,0 +1,26 @@
+[package]
+name = "rsdate"
+version = "0.1.0"
+edition = "2018"
+
+authors = [
+    "Wesley Moore <wes@wezm.net>"
+]
+homepage = "https://github.com/wezm/rsdate"
+repository = "https://github.com/wezm/rsdate.git"
+
+readme = "README.md"
+license = "MIT OR Apache-2.0"
+
+description = "rsdate connects to an ntp server, printing the returned time and/or setting the system clock."
+keywords = ["ntp", "time", "date"]
+categories = ["command-line-utilities", "date-and-time"]
+
+[dependencies]
+chrono = "0.4"
+libc = "0.2"
+log = "0.4.14"
+pico-args = "0.4.2"
+rsntp = { version =  "2.0", default-features = false }
+syslog = "5.0"
+env_logger = "0.9.0"
