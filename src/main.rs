@@ -12,12 +12,24 @@ use log::{error, info};
 use rsntp::SntpClient;
 use syslog::BasicLogger;
 
+use crate::args::Config;
+
 type Error = Box<dyn std::error::Error>;
 
 const LOG_ENV_VAR: &str = "RSDATE_LOG";
 
 fn main() {
-    match try_main() {
+    setup_logging(args::use_syslog());
+    let args = match args::parse_args() {
+        Ok(Some(config)) => config,
+        Ok(None) => process::exit(0),
+        Err(err) => {
+            error!("{}", err);
+            process::exit(1);
+        }
+    };
+
+    match try_main(args) {
         Ok(0) => {}
         Ok(status) => process::exit(status),
         Err(err) => {
@@ -27,14 +39,7 @@ fn main() {
     }
 }
 
-fn try_main() -> Result<i32, Error> {
-    let args = match args::parse_args()? {
-        Some(config) => config,
-        None => return Ok(0),
-    };
-
-    setup_logging(args.use_syslog);
-
+fn try_main(args: Config) -> Result<i32, Error> {
     let mut client = SntpClient::new();
     client.set_timeout(Duration::from_secs(u64::from(args.timeout)));
     let client = client; // discard mutability

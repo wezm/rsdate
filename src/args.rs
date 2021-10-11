@@ -7,7 +7,6 @@ use crate::Error;
 pub struct Config {
     pub print_time: bool,
     pub set_time: bool,
-    pub use_syslog: bool,
     pub timeout: u16,
     pub ntp_host: String,
 }
@@ -30,12 +29,16 @@ pub fn parse_args() -> Result<Option<Config>, Error> {
     Ok(Some(Config {
         print_time,
         set_time,
-        use_syslog: pargs.contains(["-l", "--syslog"]),
         timeout: pargs
             .opt_value_from_fn(["-t", "--timeout"], parse_timeout)?
             .unwrap_or(10),
         ntp_host: pargs.free_from_str()?,
     }))
+}
+
+pub fn use_syslog() -> bool {
+    let mut pargs = Arguments::from_env();
+    pargs.contains(["-l", "--syslog"])
 }
 
 fn print_version() -> Result<Option<Config>, Error> {
