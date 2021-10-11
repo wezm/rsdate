@@ -2,6 +2,7 @@ mod args;
 mod error;
 mod time;
 
+use std::time::Duration;
 use std::{env, process};
 
 use chrono::{DateTime, Local};
@@ -34,7 +35,9 @@ fn try_main() -> Result<i32, Error> {
 
     setup_logging(args.use_syslog);
 
-    let client = SntpClient::new();
+    let mut client = SntpClient::new();
+    client.set_timeout(Duration::from_secs(u64::from(args.timeout)));
+    let client = client; // discard mutability
     let result = client.synchronize(&args.ntp_host)?;
 
     let local_time: DateTime<Local> = DateTime::from(result.datetime());
