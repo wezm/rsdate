@@ -21,7 +21,7 @@ fn main() {
         Ok(0) => {}
         Ok(status) => process::exit(status),
         Err(err) => {
-            eprintln!("Error: {}", err);
+            error!("Error: {}", err);
             process::exit(1);
         }
     }
