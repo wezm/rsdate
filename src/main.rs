@@ -41,7 +41,7 @@ fn main() {
 
 fn try_main(args: Config) -> Result<i32, Error> {
     let mut attempts = 0;
-    let mut delay = Duration::from_secs(1);
+    let mut delay = Duration::from_millis(500);
     let result = loop {
         // We build a new client each time in case new interfaces to bind to become available
         // between attempts
