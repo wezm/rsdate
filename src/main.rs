@@ -9,7 +9,7 @@ use chrono::{DateTime, Local};
 use env_logger::Env;
 use log::LevelFilter;
 use log::{error, info};
-use rsntp::SntpClient;
+use rsntp::{ProtocolError, SntpClient, SynchroniztationError};
 use syslog::BasicLogger;
 
 use crate::args::Config;
@@ -43,7 +43,35 @@ fn try_main(args: Config) -> Result<i32, Error> {
     let mut client = SntpClient::new();
     client.set_timeout(Duration::from_secs(u64::from(args.timeout)));
     let client = client; // discard mutability
-    let result = client.synchronize(&args.ntp_host)?;
+    let mut attempts = 0;
+    let mut delay = Duration::from_secs(1);
+    let result = loop {
+        match client.synchronize(&args.ntp_host) {
+            Ok(res) => break res,
+            Err(SynchroniztationError::ProtocolError(err)) => {
+                if let ProtocolError::KissODeath(_) = err {
+                    // KoD indicates that the server rejected the request and generally
+                    // means that the client should stop sending request to the server.
+                    return Err(err.into());
+                }
+            }
+            Err(err) => {
+                // Retry in the face of other errors
+                if attempts < args.retry || args.retry < 0 {
+                    error!(
+                        "ntp sync error, retry in {} seconds: {}",
+                        delay.as_secs(),
+                        err
+                    );
+                    std::thread::sleep(delay);
+                    delay *= 2;
+                    attempts += 1;
+                } else {
+                    return Err(err.into());
+                }
+            }
+        }
+    };
 
     let local_time: DateTime<Local> = DateTime::from(result.datetime());
     let local_time_str = local_time.to_rfc2822();

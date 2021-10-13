@@ -8,6 +8,7 @@ pub struct Config {
     pub print_time: bool,
     pub set_time: bool,
     pub timeout: u16,
+    pub retry: i16,
     pub ntp_host: String,
 }
 
@@ -29,9 +30,8 @@ pub fn parse_args() -> Result<Option<Config>, Error> {
     Ok(Some(Config {
         print_time,
         set_time,
-        timeout: pargs
-            .opt_value_from_fn(["-t", "--timeout"], parse_timeout)?
-            .unwrap_or(10),
+        timeout: pargs.opt_value_from_str(["-t", "--timeout"])?.unwrap_or(10),
+        retry: pargs.opt_value_from_str(["-r", "--retry"])?.unwrap_or(0),
         ntp_host: pargs.free_from_str()?,
     }))
 }
@@ -52,10 +52,6 @@ fn version_string() -> String {
         env!("CARGO_PKG_NAME"),
         env!("CARGO_PKG_VERSION")
     )
-}
-
-fn parse_timeout(s: &str) -> Result<u16, &'static str> {
-    s.parse().map_err(|_| "not a number")
 }
 
 pub fn print_usage() -> Result<Option<Config>, Error> {
@@ -81,6 +77,11 @@ OPTIONS:
     -p, --print
             Print the time returned by the server.
 
+    -r, --retry NUMBER
+            If retrieving the time fails retry NUMBER times. Retries are made
+            at 1, 2, 4, 8, 16, etc. seconds.  A value of 0 disables retry
+            (default). A negative value retries forever.
+
     -s, --set
             Set the system time to the returned time.
 
@@ -97,7 +98,7 @@ AUTHOR
     {}
 
 SEE ALSO
-    Project source code: https://github.com/wezm/rsdate ",
+    Project source code and issue tracker: https://github.com/wezm/rsdate",
         version_string(),
         env!("CARGO_PKG_AUTHORS"),
         bin = env!("CARGO_PKG_NAME")
