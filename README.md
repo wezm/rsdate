@@ -58,6 +58,11 @@ OPTIONS:
     -p, --print
             Print the time returned by the server.
 
+    -r, --retry NUMBER
+            If retrieving the time fails retry NUMBER times. Retries are made
+            at 1, 2, 4, 8, 16, etc. seconds.  A value of 0 disables retry
+            (default). A negative value retries forever.
+
     -s, --set
             Set the system time to the returned time.
 
