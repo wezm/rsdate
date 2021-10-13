@@ -40,12 +40,14 @@ fn main() {
 }
 
 fn try_main(args: Config) -> Result<i32, Error> {
-    let mut client = SntpClient::new();
-    client.set_timeout(Duration::from_secs(u64::from(args.timeout)));
-    let client = client; // discard mutability
     let mut attempts = 0;
     let mut delay = Duration::from_secs(1);
     let result = loop {
+        // We build a new client each time in case new interfaces to bind to become available
+        // between attempts
+        let mut client = SntpClient::new();
+        client.set_timeout(Duration::from_secs(u64::from(args.timeout)));
+        let client = client; // discard mutability
         match client.synchronize(&args.ntp_host) {
             Ok(res) => break res,
             Err(SynchroniztationError::ProtocolError(err)) => {
