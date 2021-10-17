@@ -2,7 +2,6 @@ mod args;
 mod error;
 mod time;
 
-use std::net::Ipv6Addr;
 use std::time::Duration;
 use std::{env, process};
 
@@ -47,7 +46,6 @@ fn try_main(args: Config) -> Result<i32, Error> {
         // We build a new client each time in case new interfaces to bind to become available
         // between attempts
         let mut client = SntpClient::new();
-        client.set_bind_address((Ipv6Addr::UNSPECIFIED, 0).into());
         client.set_timeout(Duration::from_secs(u64::from(args.timeout)));
         let client = client; // discard mutability
         match client.synchronize(&args.ntp_host) {
