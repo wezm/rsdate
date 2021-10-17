@@ -27,6 +27,9 @@ pub fn parse_args() -> Result<Option<Config>, Error> {
         print_time = true;
     }
 
+    // Consume -l argument so that pargs.free_from_str() does not see it 
+    let _ = pargs.contains(["-l", "--syslog"]);
+
     Ok(Some(Config {
         print_time,
         set_time,
