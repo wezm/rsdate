@@ -22,8 +22,8 @@ libc = "0.2"
 log = "0.4.14"
 pico-args = "0.4.2"
 rsntp = { version =  "2.0", default-features = false }
-syslog = "5.0"
-env_logger = "0.9.0"
+syslog = "6, >= 6.0.1"
+env_logger = { version = "0.9.0", default-features = false }
 
 [dev-dependencies]
 assert_cmd = "2"
