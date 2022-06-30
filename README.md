@@ -79,7 +79,7 @@ OPTIONS:
 Build from Source
 -----------------
 
-**Minimum Supported Rust Version:** 1.53.0
+**Minimum Supported Rust Version:** 1.58.1
 
 `rsdate` is implemented in Rust. See the Rust website for [instructions on
 installing the toolchain][rustup].
