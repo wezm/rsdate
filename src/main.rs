@@ -5,7 +5,8 @@ mod time;
 use std::time::Duration;
 use std::{env, process};
 
-use chrono::{DateTime, Local};
+use ::time::format_description::well_known::Rfc2822;
+use ::time::UtcOffset;
 use env_logger::Env;
 use log::LevelFilter;
 use log::{error, info};
@@ -75,15 +76,16 @@ fn try_main(args: Config) -> Result<i32, Error> {
         }
     };
 
-    let local_time: DateTime<Local> = DateTime::from(result.datetime());
-    let local_time_str = local_time.to_rfc2822();
+    let utc_time = result.datetime().into_offset_date_time()?;
+    let local_offset = UtcOffset::current_local_offset().unwrap_or(UtcOffset::UTC);
+    let local_time_str = utc_time.to_offset(local_offset).format(&Rfc2822)?;
 
     if args.print_time {
         info!("[{}]\t{}", args.ntp_host, local_time_str);
     }
 
     if args.set_time {
-        match time::change_system_time(local_time) {
+        match time::change_system_time(utc_time) {
             Ok(()) => {
                 info!("Local clock set to {}", local_time_str);
                 Ok(0)
