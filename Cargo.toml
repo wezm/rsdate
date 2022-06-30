@@ -18,13 +18,13 @@ categories = ["command-line-utilities", "date-and-time"]
 
 [dependencies]
 env_logger = { version = "0.9.0", default-features = false }
-libc = "0.2"
-log = "0.4.14"
-pico-args = "0.4.2"
-rsntp = { version =  "3.0", default-features = false, features = ["time"] }
-syslog = "6, >= 6.0.1"
-time = { version = "0.3.7", features = ["local-offset"] }
+libc = "0.2.126"
+log = "0.4.17"
+pico-args = "0.5.0"
+rsntp = { version = "3.0.1", default-features = false, features = ["time"] }
+syslog = "6.0.1"
+time = { version = "0.3.11", features = ["local-offset"] }
 
 [dev-dependencies]
-assert_cmd = "2"
-predicates = "2"
+assert_cmd = "2.0.4"
+predicates = "2.1.1"
