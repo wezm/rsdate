@@ -4,7 +4,8 @@ use assert_cmd::prelude::*;
 use predicates::prelude::*;
 
 // [2021-10-11T05:30:17Z INFO  rsdate] [pool.ntp.org]	Mon, 11 Oct 2021 15:30:17 +1000
-const OUTPUT_PATTERN: &str = r"\[INFO  rsdate\] \[pool.ntp.org\]	..., \d{1,2} ... \d{4} \d{2}:\d{2}:\d{2}";
+const OUTPUT_PATTERN: &str =
+    r"\[INFO  rsdate\] \[pool.ntp.org\]	..., \d{1,2} ... \d{4} \d{2}:\d{2}:\d{2}";
 
 #[test]
 fn print() {
