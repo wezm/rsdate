@@ -10,7 +10,7 @@ use crate::error::get_errno;
 pub fn change_system_time(t: OffsetDateTime) -> Result<(), c_int> {
     let nanos = t.unix_timestamp_nanos();
     let sec = nanos / 1_000_000_000;
-    let usec = ((nanos - sec) / 1_000) as suseconds_t;
+    let usec = ((nanos % 1_000_000_000) / 1_000) as suseconds_t;
     let mut time_value: timeval = unsafe { mem::zeroed() };
     time_value.tv_sec = sec as time_t;
     time_value.tv_usec = usec;
