@@ -23,7 +23,7 @@ log = "0.4.17"
 pico-args = "0.5.0"
 rsntp = { version = "3.0.1", default-features = false, features = ["time"] }
 syslog = "6.0.1"
-time = { version = "0.3.11", features = ["local-offset"] }
+time = { version = "0.3.47", features = ["local-offset"] }
 
 [dev-dependencies]
 assert_cmd = "2.0.4"
